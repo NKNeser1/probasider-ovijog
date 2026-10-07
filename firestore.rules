@@ -1,0 +1,42 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================
+    // COMPLAINTS
+    // =========================
+    match /complaints/{complaintId} {
+      allow create: if true;
+      allow read: if true;
+      allow update, delete: if false;
+    }
+
+    // =========================
+    // HELP REQUESTS
+    // =========================
+    match /helpRequests/{requestId} {
+      allow create: if true;
+      allow read: if true;
+      allow update, delete: if false;
+
+      // =========================
+      // ADVICE / COMMENTS
+      // =========================
+      match /advice/{adviceId} {
+        allow create: if true;
+        allow read: if true;
+        allow update, delete: if false;
+      }
+
+      // =========================
+      // HELP OFFERS
+      // =========================
+      match /helpOffers/{offerId} {
+        allow create: if true;
+        allow read: if true;
+        allow update, delete: if false;
+      }
+    }
+  }
+}
