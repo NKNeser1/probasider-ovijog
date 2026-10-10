@@ -152,7 +152,7 @@ function SponsorCarousel({
     };
   }, [
     sponsors.length,
-    currentSponsor?.mediaType,
+    currentSponsor,
   ]);
 
   /* -------------------------
@@ -227,9 +227,12 @@ function SponsorCarousel({
         onEnded={nextSlide}
         className="block max-h-[420px] w-full bg-black object-contain"
       />
-    ) : (
+      
+        ) : (
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         key={currentSponsor.mediaUrl}
+        
         src={currentSponsor.mediaUrl}
         alt={
           currentSponsor.name ||

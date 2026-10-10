@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://probasider-ovijog.vercel.app"),
   title: "প্রবাসীদের অভিযোগ | Probashider Ovijog",
   description:
     "প্রবাসীদের সমস্যা, অভিযোগ ও অনিয়ম তুলে ধরুন। অভিযোগ করুন, প্রমাণ দিন এবং প্রবাসীদের অভিজ্ঞতা ও মতামত জানুন।",

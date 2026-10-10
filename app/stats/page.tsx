@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+
 import { collection, doc, onSnapshot } from "firebase/firestore";
 
 import { db } from "@/lib/firebase";
@@ -652,6 +653,8 @@ export default function StatsPage() {
 
                     ) : (
 
+                    <>
+                                            {/* eslint-disable-next-line @next/next/no-img-element */} 
                       <img
                         key={currentSponsor.id}
                         src={currentSponsor.mediaUrl}
@@ -659,6 +662,7 @@ export default function StatsPage() {
                         className="max-h-[520px] w-full object-contain"
                       />
 
+                      </>
                     )}
 
                     {/* Previous */}

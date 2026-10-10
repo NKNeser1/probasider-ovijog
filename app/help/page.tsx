@@ -38,10 +38,7 @@ type Advice = {
   };
 };
 
-type HelpCounts = {
-  advice: number;
-  helpers: number;
-};
+
 
 type Sponsor = {
   id: string;
@@ -848,6 +845,7 @@ export default function HelpPage() {
                     className="block max-h-[75vh] w-full object-contain"
                   />
                 ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     key={currentSponsor.id}
                     src={currentSponsor.mediaUrl}

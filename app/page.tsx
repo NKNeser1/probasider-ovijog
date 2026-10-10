@@ -2,7 +2,7 @@
 
 import { WelcomeIntro } from "@/components/WelcomeIntro";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
@@ -225,19 +225,19 @@ export default function Home() {
     );
   };
 
-  const goToNextSponsor = () => {
-    if (sponsors.length === 0) {
-      return;
+  const goToNextSponsor = useCallback(() => {
+  if (sponsors.length === 0) {
+    return;
+  }
+
+  setSponsorIndex((previous) => {
+    if (previous >= sponsors.length - 1) {
+      return 0;
     }
 
-    setSponsorIndex((previous) => {
-      if (previous >= sponsors.length - 1) {
-        return 0;
-      }
-
-      return previous + 1;
-    });
-  };
+    return previous + 1;
+  });
+}, [sponsors.length]);
 
   const goToPreviousSponsor = () => {
     if (sponsors.length === 0) {
@@ -288,7 +288,7 @@ export default function Home() {
     return () => {
       window.clearTimeout(timer);
     };
-  }, [currentSponsor]);
+  }, [currentSponsor, goToNextSponsor]);
 
   
 
@@ -540,7 +540,7 @@ export default function Home() {
                 </div>
 
               ) : (
-
+/* eslint-disable-next-line @next/next/no-img-element */
                 <img
                   key={currentSponsor.id}
                   src={currentSponsor.mediaUrl}

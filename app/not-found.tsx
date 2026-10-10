@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 
+import Image from "next/image";
+
 export default function NotFound() {
+  
   return (
     <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#f0fdf8] via-white to-[#f8fafc] px-4 py-12">
       <div className="w-full max-w-xl text-center">
@@ -10,11 +13,16 @@ export default function NotFound() {
         {/* LOGO */}
         <div className="mb-7 flex justify-center">
           <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-[#0f766e]/10 bg-white shadow-xl shadow-[#0f766e]/10">
-            <img
-              src="/images/PROBASHIDER OVIJOG.png"
-              alt="প্রবাসীদের অভিযোগ"
-              className="h-full w-full object-contain"
-            />
+            
+            
+<Image
+  src="/images/PROBASHIDER OVIJOG.png"
+  alt="প্রবাসীদের অভিযোগ"
+  width={96}
+  height={96}
+  className="h-full w-full object-contain"
+/>
+            
           </div>
         </div>
 

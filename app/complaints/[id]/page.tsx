@@ -314,6 +314,7 @@ export default function ComplaintDetailsPage({
                               rel="noopener noreferrer"
                               className="block"
                             >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
                                 src={fileUrl}
                                 alt={file.name || `Evidence ${index + 1}`}

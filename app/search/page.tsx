@@ -678,7 +678,7 @@ export default function SearchPage() {
                   rel="noopener noreferrer"
                   className="block"
                 >
-
+{/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     key={
                       currentSponsor.id
@@ -696,21 +696,16 @@ export default function SearchPage() {
                 </a>
 
               ) : (
-
-                <img
-                  key={
-                    currentSponsor.id
-                  }
-                  src={
-                    currentSponsor.mediaUrl
-                  }
-                  alt={
-                    currentSponsor.name ||
-                    "Sponsor"
-                  }
-                  className="block h-auto max-h-[75vh] w-full object-contain"
-                />
-
+                
+                                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    key={currentSponsor.id}
+                    src={currentSponsor.mediaUrl}
+                    alt={currentSponsor.name || "Sponsor"}
+                    className="block h-auto max-h-[75vh] w-full object-contain"
+                  />
+                </>
               )
 
             )}

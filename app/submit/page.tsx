@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   addDoc,
@@ -13,6 +13,8 @@ import {
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase";
+
+
 
 const countries = [
   "🇧🇩 বাংলাদেশ — Bangladesh",
@@ -250,6 +252,7 @@ const categories = [
 ];
 
 export default function SubmitComplaintPage() {
+    const router = useRouter();
   const [language, setLanguage] = useState<"bn" | "en">("bn");
   const [countrySearch, setCountrySearch] = useState("");
 const [selectedCountry, setSelectedCountry] = useState("");
@@ -354,11 +357,10 @@ useEffect(() => {
   }, 3000);
 
   return () => clearTimeout(timer);
-}, [currentSponsor, sortedSponsors]);
+  
+  }, [currentSponsor, sortedSponsors]);
 
-
-
-const nextSponsorMedia = () => {
+  const nextSponsorMedia = () => {
   if (sortedSponsors.length <= 1) {
     return;
   }
@@ -572,7 +574,7 @@ for (const file of files) {
         collection(db, "complaints"),
         complaintData
       );
-window.location.href = `/success?complaint=${encodeURIComponent(complaintId)}`;
+router.push(`/success?complaint=${encodeURIComponent(complaintId)}`);
       alert(
         bn
           ? `অভিযোগ সফলভাবে জমা হয়েছে।\n\nআপনার অভিযোগ নম্বর:\n${complaintId}\n\nএই নম্বরটি কপি করে নিরাপদে সংরক্ষণ করুন।`
@@ -718,12 +720,15 @@ window.location.href = `/success?complaint=${encodeURIComponent(complaintId)}`;
             className="block max-h-[75vh] w-full object-contain"
           />
         ) : (
+        <>
+  {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             key={currentSponsor.id}
             src={currentSponsor.mediaUrl}
             alt={currentSponsor.name || "Sponsor"}
             className="block max-h-[75vh] w-full object-contain"
           />
+          </>
         )}
 
         {/* Previous */}

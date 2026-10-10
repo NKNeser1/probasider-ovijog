@@ -180,6 +180,7 @@ export function WelcomeIntro() {
           <div className="relative flex h-44 w-44 items-center justify-center sm:h-52 sm:w-52">
             <div className="absolute inset-0 rounded-full bg-emerald-400/10 blur-2xl" />
 
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={logo}
               alt="প্রবাসীদের অভিযোগ"
@@ -733,6 +734,7 @@ export function WelcomeIntroAdmin() {
 
                     <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-100">
 
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={displayImage}
                         alt={intro.title || "Welcome Intro"}
