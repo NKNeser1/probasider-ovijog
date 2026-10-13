@@ -124,7 +124,7 @@ export default function Home() {
           })
           .sort((a, b) => {
             const getCreatedTime = (   value: string | number | { seconds?: number } | null | undefined, ) => {
-              
+
               if (
   typeof value === "object" &&
   value !== null &&
@@ -219,7 +219,7 @@ export default function Home() {
     const urlBase = sponsor.mediaUrl || "";
 
     return (
-      
+
       /\/video\/upload\//i.test(urlBase) ||
 /\.(mp4|webm|mov|m4v|ogg)(\?|$)/i.test(urlBase)
     );
@@ -257,7 +257,7 @@ export default function Home() {
    * Sponsor list পরিবর্তন হলে index ঠিক রাখা
    */
 
-  
+
 
   /*
    * ============================================================
@@ -290,7 +290,7 @@ export default function Home() {
     };
   }, [currentSponsor, goToNextSponsor]);
 
-  
+
 
   return (
 
@@ -309,7 +309,7 @@ export default function Home() {
 
             <div>
               <h1 className="text-base font-bold sm:text-lg">
-                {bn ? "প্রবাসীদের অভিযোগ" : "Expatriates' Complaints"}
+                {bn ? "প্রবাসীদের অভিযোগ" : "Probasider Ovijog"}
               </h1>
 
               <p className="text-[10px] text-slate-500 sm:text-xs">
@@ -688,6 +688,43 @@ export default function Home() {
         </div>
       </section>
 
+
+      {/* EXPATRIATE SERVICES */}
+      <section className="bg-[#f7f9f8] py-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Link
+            href="/services"
+            className="group block overflow-hidden rounded-3xl border border-emerald-900/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-lg sm:p-8"
+          >
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-3xl">
+                  🌍
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-extrabold text-slate-900 sm:text-2xl">
+                    {bn
+                      ? "প্রবাসীদের প্রয়োজনীয় সেবা"
+                      : "Essential Services for Expatriates"}
+                  </h3>
+
+                  <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-500 sm:text-base">
+                    {bn
+                      ? "দূতাবাস, জরুরি যোগাযোগ, পাসপোর্ট, শ্রম অধিকার, ভিসা ও সরকারি তথ্য এক জায়গায় খুঁজুন।"
+                      : "Find embassy contacts, emergency help, passport services, labor rights, visa information and official updates in one place."}
+                  </p>
+                </div>
+              </div>
+
+              <span className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-bold text-white transition group-hover:bg-emerald-800">
+                {bn ? "সেবাগুলো দেখুন" : "Explore Services"}
+                <span aria-hidden="true">→</span>
+              </span>
+            </div>
+          </Link>
+        </div>
+      </section>
 
       {/* HOW TO COMPLAIN */}
       <section className="bg-white py-16">
@@ -1106,7 +1143,7 @@ export default function Home() {
             <div>
 
               <h4 className="font-bold text-white">
-                {bn ? "প্রবাসীদের অভিযোগ" : "Expatriates' Complaints"}
+                {bn ? "প্রবাসীদের অভিযোগ" : "Probasider Ovijog"}
               </h4>
 
               <p className="mt-3 text-sm leading-7">
@@ -1188,7 +1225,7 @@ export default function Home() {
           <div className="mt-10 border-t border-white/10 pt-6 text-center text-xs">
 
             © {new Date().getFullYear()}{" "}
-            {bn ? "প্রবাসীদের অভিযোগ" : "Expatriates' Complaints"}.
+            {bn ? "প্রবাসীদের অভিযোগ" : "Probasider Ovijog"}.
             {" "}
             {bn ? "সকল অধিকার সংরক্ষিত।" : "All rights reserved."}
 
