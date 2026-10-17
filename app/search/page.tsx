@@ -4,14 +4,12 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   collection,
-  doc,
-  increment,
   onSnapshot,
   query,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { LegalAssistanceForm } from "@/components/LegalAssistanceForm";
 
 type Complaint = {
   id: string;
@@ -24,8 +22,6 @@ type Complaint = {
   details: string;
 
   views?: number;
-  truthVotes?: number;
-  falseVotes?: number;
   commentCount?: number;
 };
 
@@ -38,10 +34,16 @@ type Sponsor = {
   active: boolean;
   createdAt?: {
     toMillis?: () => number;
-  } | string | number;
+  } | string | number; };
+
+type ComplaintComment = {
+  id: string;
+  text: string;
+  createdAt: string | null;
+  updatedAt: string | null;
 };
 
-export default function SearchPage() {
+   export default function SearchPage() {
   const [language, setLanguage] =
     useState<"bn" | "en">("bn");
 
@@ -54,16 +56,257 @@ export default function SearchPage() {
   const [search, setSearch] =
     useState("");
 
-  const [votedComplaints, setVotedComplaints] =
-    useState<
-      Record<string, "truth" | "false">
-    >({});
+
 
   const [sponsorIndex, setSponsorIndex] =
-    useState(0);
+  useState(0);
+
+
+const [openCommentId, setOpenCommentId] =
+  useState<string | null>(null);
+
+const [commentsByComplaint, setCommentsByComplaint] =
+  useState<Record<string, ComplaintComment[]>>({});
+
+const [commentDrafts, setCommentDrafts] =
+  useState<Record<string, string>>({});
+
+const [commentLoadingId, setCommentLoadingId] =
+  useState<string | null>(null);
+
+const [commentSubmittingId, setCommentSubmittingId] =
+  useState<string | null>(null);
+     const [editingCommentId, setEditingCommentId] =
+  useState<string | null>(null);
+
+const [editCodeDrafts, setEditCodeDrafts] =
+  useState<Record<string, string>>({});
+
+const [editTextDrafts, setEditTextDrafts] =
+  useState<Record<string, string>>({});
+
+const [commentActionLoadingId, setCommentActionLoadingId] =
+  useState<string | null>(null);
 
   const bn = language === "bn";
 
+
+const toggleComments = async (complaintId: string) => {
+  if (openCommentId === complaintId) {
+    setOpenCommentId(null);
+    return;
+  }
+
+  setOpenCommentId(complaintId);
+
+  if (commentsByComplaint[complaintId]) {
+    return;
+  }
+
+  setCommentLoadingId(complaintId);
+
+  try {
+    const response = await fetch(
+      `/api/complaints/${encodeURIComponent(complaintId)}/comments`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "মন্তব্য লোড করা যায়নি।"
+      );
+    }
+
+    setCommentsByComplaint((previous) => ({
+      ...previous,
+      [complaintId]: data.comments ?? [],
+    }));
+  } catch (error) {
+    alert(
+      error instanceof Error
+        ? error.message
+        : "মন্তব্য লোড করা যায়নি।"
+    );
+  } finally {
+    setCommentLoadingId(null);
+  }
+};
+
+const submitComment = async (complaintId: string) => {
+  const text = (
+    commentDrafts[complaintId] ?? ""
+  ).trim();
+
+  if (!text || text.length > 1000) {
+    alert(
+      bn
+        ? "১ থেকে ১০০০ অক্ষরের মধ্যে মন্তব্য লিখুন।"
+        : "Enter a comment between 1 and 1000 characters."
+    );
+    return;
+  }
+
+  setCommentSubmittingId(complaintId);
+
+  try {
+    const response = await fetch(
+      `/api/complaints/${encodeURIComponent(complaintId)}/comments`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "মন্তব্য জমা দেওয়া যায়নি।"
+      );
+    }
+
+    setCommentsByComplaint((previous) => ({
+      ...previous,
+      [complaintId]: [
+        ...(previous[complaintId] ?? []),
+        data.comment,
+      ],
+    }));
+
+    setCommentDrafts((previous) => ({
+      ...previous,
+      [complaintId]: "",
+    }));
+
+    if (data.editCode) {
+      window.prompt(
+        bn
+          ? "আপনার মন্তব্যের গোপন সম্পাদনা কোডটি সংরক্ষণ করুন। এটি পরে আর দেখানো হবে না:"
+          : "Save your private comment edit code. It will not be shown again:",
+        data.editCode
+      );
+    }
+
+    alert(
+      bn
+        ? "মন্তব্য জমা হয়েছে।"
+        : "Comment submitted."
+    );
+  } catch (error) {
+    alert(
+      error instanceof Error
+        ? error.message
+        : "মন্তব্য জমা দেওয়া যায়নি।"
+    );
+  } finally {
+    setCommentSubmittingId(null);
+  }
+};
+     const editComment = async (complaintId: string, commentId: string) => {
+  const editCode = (editCodeDrafts[commentId] ?? "").trim();
+  const text = (editTextDrafts[commentId] ?? "").trim();
+
+  if (!/^(?:[0-9]{5}|[a-f0-9]{32})$/.test(editCode)) {
+    alert(bn ? "সঠিক গোপন কোড দিন।" : "Enter a valid secret code.");
+    return;
+  }
+
+  if (!text || text.length > 1000) {
+    alert(bn ? "১ থেকে ১০০০ অক্ষরের মন্তব্য লিখুন।" : "Enter 1–1000 characters.");
+    return;
+  }
+
+  setCommentActionLoadingId(commentId);
+
+  try {
+    const response = await fetch(
+      `/api/complaints/${encodeURIComponent(complaintId)}/comments`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ commentId, editCode, text }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "মন্তব্য সম্পাদনা করা যায়নি।");
+    }
+
+    setCommentsByComplaint((previous) => ({
+      ...previous,
+      [complaintId]: (previous[complaintId] ?? []).map((comment) =>
+        comment.id === commentId
+          ? { ...comment, text, updatedAt: new Date().toISOString() }
+          : comment
+      ),
+    }));
+
+    setEditingCommentId(null);
+    setEditCodeDrafts((previous) => ({ ...previous, [commentId]: "" }));
+    setEditTextDrafts((previous) => ({ ...previous, [commentId]: "" }));
+
+    alert(bn ? "মন্তব্য সম্পাদনা হয়েছে।" : "Comment updated.");
+  } catch (error) {
+    alert(error instanceof Error ? error.message : "মন্তব্য সম্পাদনা করা যায়নি।");
+  } finally {
+    setCommentActionLoadingId(null);
+  }
+};
+
+const deleteComment = async (complaintId: string, commentId: string) => {
+  const editCode = window.prompt(
+    bn ? "মন্তব্যের গোপন কোড দিন:" : "Enter the comment's secret code:"
+  );
+
+  if (editCode === null) return;
+
+  if (!/^(?:[0-9]{5}|[a-f0-9]{32})$/.test(editCode.trim())) {
+    alert(bn ? "সঠিক গোপন কোড দিন।" : "Enter a valid secret code.");
+    return;
+  }
+
+  if (!window.confirm(bn ? "আপনি কি মন্তব্যটি মুছে ফেলতে চান?" : "Delete this comment?")) {
+    return;
+  }
+
+  setCommentActionLoadingId(commentId);
+
+  try {
+    const response = await fetch(
+      `/api/complaints/${encodeURIComponent(complaintId)}/comments`,
+      {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ commentId, editCode: editCode.trim() }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "মন্তব্য মুছে ফেলা যায়নি।");
+    }
+
+    setCommentsByComplaint((previous) => ({
+      ...previous,
+      [complaintId]: (previous[complaintId] ?? []).filter(
+        (comment) => comment.id !== commentId
+      ),
+    }));
+
+    alert(bn ? "মন্তব্য মুছে ফেলা হয়েছে।" : "Comment deleted.");
+  } catch (error) {
+    alert(error instanceof Error ? error.message : "মন্তব্য মুছে ফেলা যায়নি।");
+  } finally {
+    setCommentActionLoadingId(null);
+  }
+};
 
   /* ================================
      LOAD COMPLAINTS
@@ -244,152 +487,6 @@ export default function SearchPage() {
         (previous + 1) %
         sortedSponsors.length
     );
-  };
-
-
-  /* ================================
-     LOAD VOTE HISTORY
-  ================================= */
-
-  useEffect(() => {
-  const timeoutId = window.setTimeout(() => {
-    try {
-      const savedVotes =
-        localStorage.getItem(
-          "probashider-ovijog-votes"
-        );
-
-      if (savedVotes) {
-        setVotedComplaints(
-          JSON.parse(savedVotes)
-        );
-      }
-    } catch {
-      console.warn(
-        "Vote history could not be loaded."
-      );
-    }
-  }, 0);
-
-  return () => {
-    window.clearTimeout(timeoutId);
-  };
-}, []);
-
-
-  /* ================================
-     NUMBER FORMAT
-  ================================= */
-
-  const formatCount = (
-    value: number = 0
-  ) => {
-    if (value >= 1_000_000) {
-      return `${(
-        value / 1_000_000
-      )
-        .toFixed(
-          value >= 10_000_000
-            ? 0
-            : 1
-        )
-        .replace(
-          /\.0$/,
-          ""
-        )}M`;
-    }
-
-    if (value >= 100_000) {
-      return `${(
-        value / 100_000
-      )
-        .toFixed(1)
-        .replace(
-          /\.0$/,
-          ""
-        )}L`;
-    }
-
-    if (value >= 1_000) {
-      return `${(
-        value / 1_000
-      )
-        .toFixed(
-          value >= 10_000
-            ? 0
-            : 1
-        )
-        .replace(
-          /\.0$/,
-          ""
-        )}K`;
-    }
-
-    return String(value);
-  };
-
-
-  /* ================================
-     VOTE HANDLER
-  ================================= */
-
-  const handleVote = async (
-    complaint: Complaint,
-    vote: "truth" | "false"
-  ) => {
-    if (
-      votedComplaints[
-        complaint.id
-      ]
-    ) {
-      return;
-    }
-
-    try {
-      await updateDoc(
-        doc(
-          db,
-          "complaints",
-          complaint.id
-        ),
-        vote === "truth"
-          ? {
-              truthVotes:
-                increment(1),
-            }
-          : {
-              falseVotes:
-                increment(1),
-            }
-      );
-
-      const updatedVotes = {
-        ...votedComplaints,
-        [complaint.id]: vote,
-      };
-
-      setVotedComplaints(
-        updatedVotes
-      );
-
-      localStorage.setItem(
-        "probashider-ovijog-votes",
-        JSON.stringify(
-          updatedVotes
-        )
-      );
-    } catch (error) {
-      console.error(
-        "Vote error:",
-        error
-      );
-
-      alert(
-        bn
-          ? "ভোট দেওয়া যায়নি। কিছুক্ষণ পর আবার চেষ্টা করুন।"
-          : "Your vote could not be submitted. Please try again."
-      );
-    }
   };
 
 
@@ -696,7 +793,7 @@ export default function SearchPage() {
                 </a>
 
               ) : (
-                
+
                                 <>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -785,29 +882,7 @@ export default function SearchPage() {
             {filteredComplaints.map(
               (complaint) => {
 
-                const truthVotes =
-                  complaint.truthVotes ||
-                  0;
 
-                const falseVotes =
-                  complaint.falseVotes ||
-                  0;
-
-                const totalVotes =
-                  truthVotes +
-                  falseVotes;
-
-                const truthPercent =
-                  totalVotes > 0
-                    ? (truthVotes /
-                        totalVotes) *
-                      100
-                    : 50;
-
-                const currentVote =
-                  votedComplaints[
-                    complaint.id
-                  ];
 
 
                 return (
@@ -903,194 +978,6 @@ export default function SearchPage() {
                       )}
 
 
-                      {/* =================================
-                          TRUTH / FALSE
-                      ================================== */}
-
-                      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
-
-                        <p className="text-center text-sm font-extrabold text-[#092c25] sm:text-base">
-
-                          {bn
-                            ? "এই অভিযোগ সম্পর্কে আপনার ধারণা কি?"
-                            : "What is your opinion about this complaint?"}
-
-                        </p>
-
-
-                        {/* BUTTONS */}
-
-                        <div className="mt-4 grid grid-cols-2 gap-3">
-
-                          <button
-                            type="button"
-                            disabled={
-                              !!currentVote
-                            }
-                            onClick={() =>
-                              handleVote(
-                                complaint,
-                                "truth"
-                              )
-                            }
-                            className={`rounded-xl border px-4 py-3 text-sm font-extrabold transition ${
-                              currentVote ===
-                              "truth"
-                                ? "border-emerald-600 bg-emerald-600 text-white"
-                                : currentVote
-                                ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400"
-                                : "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-                            }`}
-                          >
-                            🟢{" "}
-                            {
-                              bn
-                                ? "সত্য"
-                                : "True"
-                            }
-                          </button>
-
-
-                          <button
-                            type="button"
-                            disabled={
-                              !!currentVote
-                            }
-                            onClick={() =>
-                              handleVote(
-                                complaint,
-                                "false"
-                              )
-                            }
-                            className={`rounded-xl border px-4 py-3 text-sm font-extrabold transition ${
-                              currentVote ===
-                              "false"
-                                ? "border-red-600 bg-red-600 text-white"
-                                : currentVote
-                                ? "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400"
-                                : "border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
-                            }`}
-                          >
-                            🔴{" "}
-                            {
-                              bn
-                                ? "মিথ্যা"
-                                : "False"
-                            }
-                          </button>
-
-                        </div>
-
-
-                        {/* PROPORTIONAL BAR */}
-
-                        <div className="mt-5 flex h-3 w-full overflow-hidden rounded-full bg-red-500">
-
-                          <div
-                            className="h-full bg-emerald-500 transition-all duration-500"
-                            style={{
-                              width: `${truthPercent}%`,
-                            }}
-                          />
-
-                        </div>
-
-
-                        {/* VOTE COUNTS */}
-
-                        <div className="mt-2 flex items-center justify-between text-xs font-bold">
-
-                          <span className="text-emerald-600">
-                            {
-                              formatCount(
-                                truthVotes
-                              )
-                            }
-                          </span>
-
-
-                          <span className="text-red-600">
-                            {
-                              formatCount(
-                                falseVotes
-                              )
-                            }
-                          </span>
-
-                        </div>
-
-
-                        {currentVote && (
-
-                          <p className="mt-3 text-center text-[11px] font-semibold text-slate-400">
-
-                            {bn
-                              ? "আপনি এই অভিযোগে ইতিমধ্যে ভোট দিয়েছেন।"
-                              : "You have already voted on this complaint."}
-
-                          </p>
-
-                        )}
-
-                      </div>
-
-
-                      {/* =================================
-                          VIEWS / COMMENTS
-                      ================================== */}
-
-                      <div className="mt-5 grid grid-cols-2 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-
-                        <div className="border-r border-slate-200 px-4 py-3 text-center">
-
-                          <p className="text-base font-extrabold text-slate-700">
-
-                            {
-                              formatCount(
-                                complaint.views ||
-                                  0
-                              )
-                            }
-
-                          </p>
-
-
-                          <p className="mt-1 text-[10px] font-semibold text-slate-400">
-
-                            {bn
-                              ? "মোট ভিউ"
-                              : "Total Views"}
-
-                          </p>
-
-                        </div>
-
-
-                        <div className="px-4 py-3 text-center">
-
-                          <p className="text-base font-extrabold text-slate-700">
-
-                            {
-                              formatCount(
-                                complaint.commentCount ||
-                                  0
-                              )
-                            }
-
-                          </p>
-
-
-                          <p className="mt-1 text-[10px] font-semibold text-slate-400">
-
-                            {bn
-                              ? "মন্তব্য"
-                              : "Comments"}
-
-                          </p>
-
-                        </div>
-
-                      </div>
 
 
                       {/* =================================
@@ -1132,7 +1019,223 @@ export default function SearchPage() {
 
                         </Link>
 
+                        <button
+                          type="button"
+
+                          onClick={() => {
+  void toggleComments(complaint.id);
+}}
+                          className="flex items-center justify-center rounded-xl border border-slate-200 px-5 py-3 text-xs font-bold text-slate-700 transition hover:bg-slate-50"
+                        >
+                          {bn ? "💬 মন্তব্য করুন" : "💬 Comment"}
+                        </button>
+
+                        {/* SHARE BUTTON */}
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            const url = `${window.location.origin}/complaints/${complaint.id}`;
+
+                            try {
+                              if (navigator.share) {
+                                await navigator.share({
+                                  title: complaint.title,
+                                  url,
+                                });
+                              } else {
+                                await navigator.clipboard.writeText(url);
+                                alert(
+                                  bn
+                                    ? "অভিযোগের লিংক কপি হয়েছে।"
+                                    : "Complaint link copied."
+                                );
+                              }
+                            } catch (error) {
+                              if (
+                                error instanceof Error &&
+                                error.name !== "AbortError"
+                              ) {
+                                window.prompt(
+                                  bn ? "লিংকটি কপি করুন:" : "Copy this link:",
+                                  url
+                                );
+                              }
+                            }
+                          }}
+                          className="flex items-center justify-center rounded-xl border border-emerald-700 px-5 py-3 text-xs font-bold text-emerald-800 transition hover:bg-emerald-50"
+                        >
+                          {bn ? "শেয়ার করুন ↗" : "Share ↗"}
+                        </button>
+
                       </div>
+
+                                            <LegalAssistanceForm
+                        complaintNumber={complaint.complaintNumber}
+                        bn={bn}
+                      />
+
+
+                      {openCommentId === complaint.id && (
+                        <section className="mt-5 rounded-2xl border border-slate-200 p-4 sm:p-5">
+                          <h3 className="text-base font-bold text-slate-800">
+                            {bn ? "মন্তব্যসমূহ" : "Comments"}
+                          </h3>
+
+                          {commentLoadingId === complaint.id ? (
+                            <p className="mt-3 text-sm text-slate-500">
+                              {bn ? "মন্তব্য লোড হচ্ছে..." : "Loading comments..."}
+                            </p>
+                          ) : (
+                            <div className="mt-3 space-y-3">
+                              {(commentsByComplaint[complaint.id] ?? []).length === 0 ? (
+                                <p className="text-sm text-slate-500">
+                                  {bn ? "এখনো কোনো মন্তব্য নেই।" : "No comments yet."}
+                                </p>
+                              ) : (
+                                (commentsByComplaint[complaint.id] ?? []).map((comment) => (
+                                  <div
+  key={comment.id}
+  className="rounded-xl bg-slate-50 p-3"
+>
+  <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">
+    {comment.text}
+  </p>
+
+  {comment.updatedAt && (
+    <p className="mt-1 text-xs text-slate-400">
+      {bn ? "সম্পাদিত" : "Edited"}
+    </p>
+  )}
+
+  <div className="mt-3 flex flex-wrap gap-2">
+    <button
+      type="button"
+      disabled={commentActionLoadingId === comment.id}
+      onClick={() => {
+        if (editingCommentId === comment.id) {
+          setEditingCommentId(null);
+          return;
+        }
+
+        setEditingCommentId(comment.id);
+        setEditTextDrafts((previous) => ({
+          ...previous,
+          [comment.id]: comment.text,
+        }));
+        setEditCodeDrafts((previous) => ({
+          ...previous,
+          [comment.id]: "",
+        }));
+      }}
+      className="rounded-lg border border-emerald-700 px-3 py-2 text-xs font-bold text-emerald-800 disabled:opacity-50"
+    >
+      {editingCommentId === comment.id
+        ? (bn ? "বাতিল" : "Cancel")
+        : (bn ? "এডিট" : "Edit")}
+    </button>
+
+    <button
+      type="button"
+      disabled={commentActionLoadingId === comment.id}
+      onClick={() => void deleteComment(complaint.id, comment.id)}
+      className="rounded-lg border border-red-300 px-3 py-2 text-xs font-bold text-red-700 disabled:opacity-50"
+    >
+      {commentActionLoadingId === comment.id
+        ? (bn ? "অপেক্ষা করুন..." : "Please wait...")
+        : (bn ? "ডিলিট" : "Delete")}
+    </button>
+  </div>
+
+  {editingCommentId === comment.id && (
+    <form
+      className="mt-3 space-y-3"
+      onSubmit={(event) => {
+        event.preventDefault();
+        void editComment(complaint.id, comment.id);
+      }}
+    >
+      <input
+        type="password"
+        inputMode="numeric"
+        autoComplete="off"
+        maxLength={32}
+        value={editCodeDrafts[comment.id] ?? ""}
+        onChange={(event) =>
+          setEditCodeDrafts((previous) => ({
+            ...previous,
+            [comment.id]: event.target.value,
+          }))
+        }
+        placeholder={bn ? "গোপন কোড দিন" : "Enter secret code"}
+        className="w-full rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-emerald-600"
+      />
+
+      <textarea
+        value={editTextDrafts[comment.id] ?? ""}
+        onChange={(event) =>
+          setEditTextDrafts((previous) => ({
+            ...previous,
+            [comment.id]: event.target.value,
+          }))
+        }
+        maxLength={1000}
+        rows={3}
+        placeholder={bn ? "মন্তব্য সম্পাদনা করুন..." : "Edit your comment..."}
+        className="w-full rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-emerald-600"
+      />
+
+      <button
+        type="submit"
+        disabled={commentActionLoadingId === comment.id}
+        className="rounded-xl bg-[#092c25] px-4 py-3 text-xs font-bold text-white disabled:opacity-50"
+      >
+        {commentActionLoadingId === comment.id
+          ? (bn ? "সেভ হচ্ছে..." : "Saving...")
+          : (bn ? "পরিবর্তন সেভ করুন" : "Save Changes")}
+      </button>
+    </form>
+  )}
+</div>
+                                ))
+                              )}
+                            </div>
+                          )}
+
+                          <form
+                            className="mt-4 space-y-3"
+                            onSubmit={(event) => {
+                              event.preventDefault();
+                              void submitComment(complaint.id);
+                            }}
+                          >
+                            <textarea
+                              value={commentDrafts[complaint.id] ?? ""}
+                              onChange={(event) =>
+                                setCommentDrafts((previous) => ({
+                                  ...previous,
+                                  [complaint.id]: event.target.value,
+                                }))
+                              }
+                              maxLength={1000}
+                              rows={3}
+                              placeholder={bn ? "আপনার মন্তব্য লিখুন..." : "Write your comment..."}
+                              className="w-full rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-emerald-600"
+                            />
+
+                            <div className="flex justify-end">
+                              <button
+                                type="submit"
+                                disabled={commentSubmittingId === complaint.id}
+                                className="rounded-xl bg-[#092c25] px-5 py-3 text-xs font-bold text-white transition hover:bg-emerald-700 disabled:opacity-50"
+                              >
+                                {commentSubmittingId === complaint.id
+                                  ? (bn ? "জমা হচ্ছে..." : "Submitting...")
+                                  : (bn ? "মন্তব্য জমা দিন" : "Submit Comment")}
+                              </button>
+                            </div>
+                          </form>
+                        </section>
+                      )}
 
                     </div>
 

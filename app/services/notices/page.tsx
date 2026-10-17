@@ -454,6 +454,529 @@ const countrySources: Record<string, Source[]> = {
       category: "visa",
     },
   ],
+
+  Germany: [
+{
+title: "German Federal Office for Migration and Refugees",
+description: "জার্মানিতে অভিবাসন ও শরণার্থীসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.bamf.de/",
+category: "general",
+},
+],
+France: [
+{
+title: "French Ministry of the Interior",
+description: "ফ্রান্সের অভিবাসন ও বসবাসসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.interieur.gouv.fr/",
+category: "visa",
+},
+],
+Ireland: [
+{
+title: "Irish Immigration Service",
+description: "আয়ারল্যান্ডের অভিবাসন ও ইমিগ্রেশনসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.irishimmigration.ie/",
+category: "visa",
+},
+],
+Netherlands: [
+{
+title: "Dutch Immigration and Naturalisation Service",
+description: "নেদারল্যান্ডসে ভিসা ও বসবাসের সরকারি তথ্য।",
+url: "https://ind.nl/en",
+category: "visa",
+},
+],
+"New Zealand": [
+{
+title: "Immigration New Zealand",
+description: "নিউজিল্যান্ডের ভিসা ও অভিবাসনসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.immigration.govt.nz/",
+category: "visa",
+},
+],
+Norway: [
+{
+title: "Norwegian Directorate of Immigration",
+description: "নরওয়ের অভিবাসন ও বসবাসের সরকারি তথ্য।",
+url: "https://www.udi.no/en/",
+category: "visa",
+},
+],
+"South Africa": [
+{
+title: "South African Department of Home Affairs",
+description: "দক্ষিণ আফ্রিকার অভিবাসন ও পরিচয়পত্রসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.dha.gov.za/",
+category: "general",
+},
+],
+Spain: [
+{
+title: "Spanish Ministry of Inclusion, Social Security and Migration",
+description: "স্পেনে অভিবাসন ও সামাজিক সুরক্ষাসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.inclusion.gob.es/",
+category: "general",
+},
+],
+Sweden: [
+{
+title: "Swedish Migration Agency",
+description: "সুইডেনের ভিসা, কাজ ও বসবাসসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.migrationsverket.se/English.html",
+category: "visa",
+},
+],
+Switzerland: [
+{
+title: "Swiss State Secretariat for Migration",
+description: "সুইজারল্যান্ডের অভিবাসনসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.sem.admin.ch/sem/en/home.html",
+category: "general",
+},
+],
+Belgium: [
+{
+title: "Belgian Immigration Office",
+description: "বেলজিয়ামের ভিসা ও বসবাসসংক্রান্ত সরকারি তথ্য।",
+url: "https://dofi.ibz.be/en",
+category: "visa",
+},
+],
+Denmark: [
+{
+title: "Danish Immigration Service",
+description: "ডেনমার্কের অভিবাসন ও বসবাসসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.nyidanmark.dk/en-GB",
+category: "visa",
+},
+],
+Finland: [
+{
+title: "Finnish Immigration Service",
+description: "ফিনল্যান্ডের অভিবাসন ও বসবাসসংক্রান্ত সরকারি তথ্য।",
+url: "https://migri.fi/en/home",
+category: "visa",
+},
+],
+Austria: [
+{
+title: "Austrian Migration and Residence",
+description: "অস্ট্রিয়ায় অভিবাসন ও বসবাসের সরকারি তথ্য।",
+url: "https://www.migration.gv.at/en/",
+category: "visa",
+},
+],
+Greece: [
+{
+title: "Greek Ministry of Migration and Asylum",
+description: "গ্রিসের অভিবাসন ও বসবাসসংক্রান্ত সরকারি তথ্য।",
+url: "https://migration.gov.gr/en/",
+category: "visa",
+},
+],
+Poland: [
+{
+title: "Polish Office for Foreigners",
+description: "পোল্যান্ডে বিদেশিদের বসবাস ও অভিবাসনসংক্রান্ত তথ্য।",
+url: "https://www.gov.pl/web/udsc-en",
+category: "visa",
+},
+],
+Portugal: [
+{
+title: "Portuguese Government",
+description: "পর্তুগালের সরকারি সেবা ও অভিবাসনসংক্রান্ত তথ্য খুঁজুন।",
+url: "https://www.gov.pt/",
+category: "general",
+},
+],
+Luxembourg: [
+{
+title: "Luxembourg Government — Immigration",
+description: "লুক্সেমবার্গের ভিসা ও অভিবাসনসংক্রান্ত সরকারি তথ্য।",
+url: "https://maint.gouvernement.lu/en/visa-immigration.html",
+category: "visa",
+},
+],
+Cyprus: [
+{
+title: "Cyprus Civil Registry and Migration Department",
+description: "সাইপ্রাসে অভিবাসন ও বসবাসের সরকারি তথ্য।",
+url: "https://www.moi.gov.cy/",
+category: "visa",
+},
+],
+Malta: [
+{
+title: "Identità Malta",
+description: "মাল্টার পরিচয়, বসবাস ও অভিবাসনসংক্রান্ত সরকারি সেবা।",
+url: "https://identita.gov.mt/",
+category: "general",
+},
+],
+Romania: [
+{
+title: "Romanian General Inspectorate for Immigration",
+description: "রোমানিয়ায় বিদেশিদের ভিসা ও বসবাসসংক্রান্ত তথ্য।",
+url: "https://igi.mai.gov.ro/en/",
+category: "visa",
+},
+],
+Bulgaria: [
+{
+title: "Bulgarian Ministry of Interior",
+description: "বুলগেরিয়ার অভিবাসন ও বিদেশিদের অবস্থানসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.mvr.bg/en",
+category: "general",
+},
+],
+Croatia: [
+{
+title: "Croatian Ministry of the Interior",
+description: "ক্রোয়েশিয়ায় বিদেশিদের বসবাস ও কাজের সরকারি তথ্য।",
+url: "https://mup.gov.hr/",
+category: "general",
+},
+],
+Estonia: [
+{
+title: "Estonian Police and Border Guard Board",
+description: "এস্তোনিয়ার অভিবাসন ও বসবাসসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.politsei.ee/en",
+category: "visa",
+},
+],
+Latvia: [
+{
+title: "Latvian Office of Citizenship and Migration Affairs",
+description: "লাটভিয়ায় অভিবাসন ও বসবাসসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.pmlp.gov.lv/en",
+category: "visa",
+},
+],
+Lithuania: [
+{
+title: "Lithuanian Migration Department",
+description: "লিথুয়ানিয়ায় অভিবাসন ও বসবাসসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.migracija.lt/",
+category: "visa",
+},
+],
+Hungary: [
+{
+title: "Hungarian National Directorate-General for Aliens Policing",
+description: "হাঙ্গেরিতে বিদেশিদের অবস্থান ও অভিবাসনসংক্রান্ত তথ্য।",
+url: "https://oif.gov.hu/",
+category: "visa",
+},
+],
+Slovenia: [
+{
+title: "Slovenian Government",
+description: "স্লোভেনিয়ার সরকারি সেবা ও অভিবাসনসংক্রান্ত তথ্য খুঁজুন।",
+url: "https://www.gov.si/en/",
+category: "general",
+},
+],
+Slovakia: [
+{
+title: "Slovak Ministry of Interior",
+description: "স্লোভাকিয়ায় বিদেশিদের অবস্থান ও অভিবাসনসংক্রান্ত সরকারি তথ্য।",
+url: "https://www.minv.sk/?startovacia-mvsr-en=",
+category: "general",
+},
+],
+
+  Afghanistan: [
+{
+title: "Afghanistan Government Portal",
+description: "আফগানিস্তানের সরকারি তথ্য ও সেবা।",
+url: "https://www.gov.af/",
+category: "general",
+},
+],
+Albania: [
+{
+title: "Albanian Government",
+description: "আলবেনিয়ার সরকারি তথ্য ও সেবা।",
+url: "https://www.kryeministria.al/",
+category: "general",
+},
+],
+Algeria: [
+{
+title: "Algerian Government",
+description: "আলজেরিয়ার সরকারি তথ্য ও সেবা।",
+url: "https://www.el-mouradia.dz/",
+category: "general",
+},
+],
+Andorra: [
+{
+title: "Government of Andorra",
+description: "অ্যান্ডোরার সরকারি তথ্য ও সেবা।",
+url: "https://www.govern.ad/",
+category: "general",
+},
+],
+Angola: [
+{
+title: "Government of Angola",
+description: "অ্যাঙ্গোলার সরকারি তথ্য ও সেবা।",
+url: "https://governo.gov.ao/",
+category: "general",
+},
+],
+"Antigua and Barbuda": [
+{
+title: "Government of Antigua and Barbuda",
+description: "অ্যান্টিগুয়া ও বারবুডার সরকারি তথ্য ও সেবা।",
+url: "https://ab.gov.ag/",
+category: "general",
+},
+],
+Argentina: [
+{
+title: "Argentina Government — Migration",
+description: "আর্জেন্টিনার অভিবাসন ও বিদেশিদের প্রবেশসংক্রান্ত তথ্য।",
+url: "https://www.argentina.gob.ar/migraciones",
+category: "visa",
+},
+],
+Armenia: [
+{
+title: "Government of Armenia",
+description: "আর্মেনিয়ার সরকারি তথ্য ও সেবা।",
+url: "https://www.gov.am/",
+category: "general",
+},
+],
+Azerbaijan: [
+{
+title: "State Migration Service of Azerbaijan",
+description: "ভিসা, কাজের অনুমতি ও বসবাসসংক্রান্ত সরকারি তথ্য।",
+url: "https://migration.gov.az/en",
+category: "visa",
+},
+],
+Bahamas: [
+{
+title: "Government of The Bahamas",
+description: "বাহামাসের সরকারি তথ্য ও সেবা।",
+url: "https://www.bahamas.gov.bs/",
+category: "general",
+},
+],
+Bangladesh: [
+{
+title: "Bangladesh National Portal",
+description: "বাংলাদেশের সরকারি তথ্য ও সেবা।",
+url: "https://bangladesh.gov.bd/",
+category: "general",
+},
+],
+Barbados: [
+{
+title: "Government of Barbados",
+description: "বার্বাডোসের সরকারি তথ্য ও সেবা।",
+url: "https://www.gov.bb/",
+category: "general",
+},
+],
+Belarus: [
+{
+title: "Government of Belarus",
+description: "বেলারুশের সরকারি তথ্য ও সেবা।",
+url: "https://www.gov.by/",
+category: "general",
+},
+],
+Belize: [
+{
+title: "Government of Belize",
+description: "বেলিজের সরকারি তথ্য ও সেবা।",
+url: "https://www.belize.gov.bz/",
+category: "general",
+},
+],
+Bhutan: [
+{
+title: "Royal Government of Bhutan",
+description: "ভুটানের সরকারি তথ্য ও সেবা।",
+url: "https://www.gov.bt/",
+category: "general",
+},
+],
+Brazil: [
+{
+title: "Brazilian Government Portal",
+description: "ব্রাজিলের সরকারি তথ্য ও সেবা।",
+url: "https://www.gov.br/",
+category: "general",
+},
+],
+Chile: [
+{
+title: "Government of Chile",
+description: "চিলির সরকারি তথ্য ও সেবা।",
+url: "https://www.gob.cl/",
+category: "general",
+},
+],
+China: [
+{
+title: "Chinese Government Portal",
+description: "চীনের সরকারি তথ্য ও সেবা।",
+url: "https://english.www.gov.cn/",
+category: "general",
+},
+],
+Colombia: [
+{
+title: "Government of Colombia",
+description: "কলম্বিয়ার সরকারি তথ্য ও সেবা।",
+url: "https://www.gov.co/",
+category: "general",
+},
+],
+Czechia: [
+{
+title: "Czech Government Portal",
+description: "চেকিয়ার সরকারি তথ্য ও সেবা।",
+url: "https://www.vlada.cz/en/",
+category: "general",
+},
+],
+Egypt: [
+{
+title: "Egyptian Government Portal",
+description: "মিশরের সরকারি তথ্য ও সেবা।",
+url: "https://www.egypt.gov.eg/",
+category: "general",
+},
+],
+Indonesia: [
+{
+title: "Indonesian Government Portal",
+description: "ইন্দোনেশিয়ার সরকারি তথ্য ও সেবা।",
+url: "https://indonesia.go.id/",
+category: "general",
+},
+],
+Jordan: [
+{
+title: "Jordan Government Portal",
+description: "জর্ডানের সরকারি তথ্য ও সেবা।",
+url: "https://portal.jordan.gov.jo/",
+category: "general",
+},
+],
+Kenya: [
+{
+title: "Kenya Government Portal",
+description: "কেনিয়ার সরকারি তথ্য ও সেবা।",
+url: "https://www.mygov.go.ke/",
+category: "general",
+},
+],
+Maldives: [
+{
+title: "Government of Maldives",
+description: "মালদ্বীপের সরকারি তথ্য ও সেবা।",
+url: "https://www.gov.mv/",
+category: "general",
+},
+],
+Mexico: [
+{
+title: "Mexican Government Portal",
+description: "মেক্সিকোর সরকারি তথ্য ও সেবা।",
+url: "https://www.gob.mx/",
+category: "general",
+},
+],
+Nigeria: [
+{
+title: "Nigerian Government Portal",
+description: "নাইজেরিয়ার সরকারি তথ্য ও সেবা।",
+url: "https://www.gov.ng/",
+category: "general",
+},
+],
+Philippines: [
+{
+title: "Philippine Government Portal",
+description: "ফিলিপাইনের সরকারি তথ্য ও সেবা।",
+url: "https://www.gov.ph/",
+category: "general",
+},
+],
+Russia: [
+{
+title: "Russian Government Portal",
+description: "রাশিয়ার সরকারি তথ্য ও সেবা।",
+url: "https://government.ru/en/",
+category: "general",
+},
+],
+Serbia: [
+{
+title: "Government of Serbia",
+description: "সার্বিয়ার সরকারি তথ্য ও সেবা।",
+url: "https://www.srbija.gov.rs/",
+category: "general",
+},
+],
+Thailand: [
+{
+title: "Thai Government Portal",
+description: "থাইল্যান্ডের সরকারি তথ্য ও সেবা।",
+url: "https://www.thaigov.go.th/",
+category: "general",
+},
+],
+Türkiye: [
+{
+title: "Turkish Government Portal",
+description: "তুরস্কের সরকারি তথ্য ও সেবা।",
+url: "https://www.turkiye.gov.tr/",
+category: "general",
+},
+],
+Ukraine: [
+{
+title: "Government of Ukraine",
+description: "ইউক্রেনের সরকারি তথ্য ও সেবা।",
+url: "https://www.kmu.gov.ua/en",
+category: "general",
+},
+],
+Vietnam: [
+{
+title: "Vietnam Government Portal",
+description: "ভিয়েতনামের সরকারি তথ্য ও সেবা।",
+url: "https://en.baochinhphu.vn/",
+category: "general",
+},
+],
+Zambia: [
+{
+title: "Government of Zambia",
+description: "জাম্বিয়ার সরকারি তথ্য ও সেবা।",
+url: "https://www.zambia.gov.zm/",
+category: "general",
+},
+],
+Zimbabwe: [
+{
+title: "Government of Zimbabwe",
+description: "জিম্বাবুয়ের সরকারি তথ্য ও সেবা।",
+url: "https://www.zim.gov.zw/",
+category: "general",
+},
+],
+
 };
 
 const categoryLabels: Record<string, { bn: string; en: string }> = {

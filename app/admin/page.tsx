@@ -33,8 +33,10 @@ import {
 
 import { db, default as app } from "@/lib/firebase";
 import { WelcomeIntroAdmin } from "@/components/WelcomeIntro";
+import { LegalAdvocateAdmin } from "@/components/LegalAdvocateAdmin";
+import { LegalApplicationsAdmin } from "@/components/LegalApplicationsAdmin";
 
-  
+
 /* =========================================================
    TYPES
 ========================================================= */
@@ -2794,6 +2796,10 @@ export default function AdminPage() {
           )}
 
         </section>
+
+        {/* LEGAL ADVOCATE MANAGEMENT */}
+<LegalAdvocateAdmin bn={bn} />
+        <LegalApplicationsAdmin bn={bn} />
 
         {/* =====================================================
            HELP MANAGEMENT
